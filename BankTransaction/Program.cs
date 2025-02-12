@@ -1,4 +1,4 @@
-﻿using BankLib;
+using BankLib;
 using BankLib.Configuration;
 using BankLib.Rules;
 using NLog;
@@ -19,8 +19,8 @@ class Program
 
          //Initializes the BankLib logger
          LogHelper.InitializeConfiguration(logconfig);
-			LogHelper.Logger.Info("****************************************************");
-			LogHelper.Logger.Info("*** Initilizing application.");
+	 LogHelper.Logger.Info("****************************************************");
+	 LogHelper.Logger.Info("*** Initilizing application.");
 
          //==============================================================================================
          //Creation Sample of the bankconfig.xml in the current directory - based on the test
@@ -56,11 +56,13 @@ class Program
             if (key.Key != ConsoleKey.Escape)
             {
                input = string.Concat(input, key.KeyChar);
+               if (key.KeyChar == '\r' || key.KeyChar == '\n') Console.WriteLine("");
+               Console.Write(key.KeyChar);
             }
          } while (key.Key != ConsoleKey.Escape);
 
-         LogHelper.Logger.Info(@"Input completed: {0}", input);
-         Console.Write(input);
+         Console.WriteLine("");
+	 LogHelper.Logger.Info(@"Input completed: {0}", input);         
 
          //===============================================================================================
          //Initiazes Bank configuration
