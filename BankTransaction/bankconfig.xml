@@ -1,0 +1,30 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<BankConfiguration>
+	<rules>
+		<rule>
+			<priority>1</priority>
+			<name>EXPIRED</name>
+			<comparetype>HigherThan</comparetype>
+			<value>30</value>
+			<sector></sector>
+		</rule>
+		<rule>
+			<priority>2</priority>
+			<name>HIGHRISK</name>
+			<comparetype>HigherOrEqualTo</comparetype>
+			<value>1000000</value>
+			<sector>PRIVATE</sector>
+		</rule>
+		<rule>
+			<priority>3</priority>
+			<name>MEDIUMRISK</name>
+			<comparetype>HigherOrEqualTo</comparetype>
+			<value>1000000</value>
+			<sector>PUBLIC</sector>
+		</rule>
+	</rules>
+	<sectors>
+		<sector>PRIVATE</sector>
+		<sector>PUBLIC</sector>
+   </sectors>
+</BankConfiguration>
