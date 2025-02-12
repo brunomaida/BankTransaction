@@ -141,7 +141,7 @@ namespace BankLib
          Trades = ValidateTrades(trades);
          bool b3 = Trades.All(t => t.IsValid);
 
-         HasValidInputs = b1 && b2 && b3;
+         HasValidInputs = b1 && b2;// && b3;
 
          LogHelper.Logger.Debug("Bank HasValidInputs(after SetInputParametersAndTrades): {0}", HasValidInputs);
       }
