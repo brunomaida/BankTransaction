@@ -89,6 +89,8 @@ namespace BankLib
          b2 = DateTime.TryParseExact(data[2], DateFormat, _cultureInfo, DateTimeStyles.None, out d2);
          NextPaymentDate = d2;
 
+         LogHelper.Logger.Debug(@"UpdateTradeInfo - Value: {0}, Sector: {1} PaymentDate: {2}", Value, ClientSector, NextPaymentDate);
+
          IsValid = b1 && b2;
       }
    }   
