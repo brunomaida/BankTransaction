@@ -15,7 +15,7 @@ class Program
          string logconfig = "logconfig.xml";
          string fileName = "bankconfig.xml";
          string configPath = AppDomain.CurrentDomain.BaseDirectory + fileName;
-         bool createConfig = false;
+         bool createConfig = true;
 
          //Initializes the BankLib logger
          LogHelper.InitializeConfiguration(logconfig);
