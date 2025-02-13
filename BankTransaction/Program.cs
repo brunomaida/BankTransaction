@@ -14,13 +14,14 @@ class Program
          //local settings
          string logconfig = "logconfig.xml";
          string fileName = "bankconfig.xml";
-         string configPath = AppDomain.CurrentDomain.BaseDirectory + fileName;
+			string inputTrades = "input.txt"; //Use "" to no use it.
+			string configPath = AppDomain.CurrentDomain.BaseDirectory + fileName;
          bool createConfig = true;
 
          //Initializes the BankLib logger
          LogHelper.InitializeConfiguration(logconfig);
-	 LogHelper.Logger.Info("****************************************************");
-	 LogHelper.Logger.Info("*** Initilizing application.");
+			LogHelper.Logger.Info("****************************************************");
+			LogHelper.Logger.Info("*** Initilizing application.");
 
          //==============================================================================================
          //Creation Sample of the bankconfig.xml in the current directory - based on the test
@@ -28,6 +29,7 @@ class Program
          {
             BankConfiguration bc = new BankConfiguration(configPath);
             bc.DateFormat = "MM/dd/yyyy";
+            bc.InputFile = inputTrades;
 
             Rule r1 = new Rule(1, "EXPIRED", new List<RuleCriteria>());
             Rule r2 = new Rule(1, "HIGHRISK", new List<RuleCriteria>());
@@ -43,26 +45,7 @@ class Program
             bc.Rules.Add(r2);
             bc.Rules.Add(r3);
             bc.Save();
-         }
-
-         //===============================================================================================
-         // Requests the complete Input
-         Console.WriteLine("Input Reference Date, Number of Records and Trades (then press ESC to Validate):");
-         ConsoleKeyInfo key;
-         string input = "";
-         do
-         {
-            key = Console.ReadKey(true);
-            if (key.Key != ConsoleKey.Escape)
-            {
-               input = string.Concat(input, key.KeyChar);
-               if (key.KeyChar == '\r' || key.KeyChar == '\n') Console.WriteLine("");
-               Console.Write(key.KeyChar);
-            }
-         } while (key.Key != ConsoleKey.Escape);
-
-         Console.WriteLine("");
-	 LogHelper.Logger.Info(@"Input completed: {0}", input);         
+         }               
 
          //===============================================================================================
          //Initiazes Bank configuration
@@ -78,8 +61,36 @@ class Program
          else
             LogHelper.Logger.Error(messageValidation);
 
-         //Sets the inputs parameters receveid in the console
-         bank.SetInputParametersAndTrades(input);
+			string input = "";
+			//===============================================================================================
+			// Requests the complete Input if not using local file
+			if (bank.Configuration.InputFile.Length == 0)
+         {
+            Console.WriteLine("Input Reference Date, Number of Records and Trades (then press ESC to Validate):");
+            ConsoleKeyInfo key;
+            
+            do
+            {
+               key = Console.ReadKey(true);
+               if (key.Key != ConsoleKey.Escape)
+               {
+                  input = string.Concat(input, key.KeyChar);
+                  if (key.KeyChar == '\r' || key.KeyChar == '\n') Console.WriteLine("");
+                  Console.Write(key.KeyChar);
+               }
+            } while (key.Key != ConsoleKey.Escape);
+
+            Console.WriteLine("");
+            LogHelper.Logger.Info(@"Input completed: {0}", input);
+
+				//Sets the inputs parameters receveid in the console
+				bank.SetInputParametersAndTrades(input);
+			}
+         else
+         {
+            //uses the content from the file
+            bank.SetInputParametersAndTradesFromFile();
+         }
 
          //===============================================================================================
          //Checks if all important inputs are ok to proceed
