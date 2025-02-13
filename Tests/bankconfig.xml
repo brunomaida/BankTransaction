@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<bankconfiguration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+	<dateformat>MM/dd/yyyy</dateformat>
+	<inputfile>input.txt</inputfile>
+	<rules>
+		<rule>
+			<priority>1</priority>
+			<name>EXPIRED</name>
+			<Criterias>
+				<RuleCriteria xsi:type="DaysToExpireRuleCriteria">
+					<comparetype>None</comparetype>
+					<daystoexpire>30</daystoexpire>
+				</RuleCriteria>
+			</Criterias>
+		</rule>
+		<rule>
+			<priority>1</priority>
+			<name>HIGHRISK</name>
+			<Criterias>
+				<RuleCriteria xsi:type="CapitalRuleCriteria">
+					<comparetype>GreaterOrEqualTo</comparetype>
+					<capital>1000000</capital>
+				</RuleCriteria>
+				<RuleCriteria xsi:type="SectorRuleCriteria">
+					<comparetype>EqualTo</comparetype>
+					<sector>PRIVATE</sector>
+				</RuleCriteria>
+			</Criterias>
+		</rule>
+		<rule>
+			<priority>1</priority>
+			<name>MEDIUMRISK</name>
+			<Criterias>
+				<RuleCriteria xsi:type="CapitalRuleCriteria">
+					<comparetype>GreaterOrEqualTo</comparetype>
+					<capital>1000000</capital>
+				</RuleCriteria>
+				<RuleCriteria xsi:type="SectorRuleCriteria">
+					<comparetype>EqualTo</comparetype>
+					<sector>PUBLIC</sector>
+				</RuleCriteria>
+			</Criterias>
+		</rule>
+	</rules>
+</bankconfiguration>
