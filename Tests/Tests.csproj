@@ -27,4 +27,14 @@
     <ProjectReference Include="..\BankLib\BankLib.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="bankconfig.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="input.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>
+
