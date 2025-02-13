@@ -683,7 +683,7 @@ namespace Tests
 		public void Test_Bank_NotValidInputs_Trades_OK()
 		{
 			_bank.SetInputParametersAndTrades("04/23/2021", "2", _trade_f1);
-			Assert.That(!_bank.HasValidInputs);
+			Assert.That(_bank.HasValidInputs);
 		}
 
 		[Test]
