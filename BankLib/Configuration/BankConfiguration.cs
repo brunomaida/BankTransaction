@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -24,9 +24,8 @@ namespace BankLib.Configuration
       /// <summary>
       /// Initializes a new Instance of BankConfiguration.
       /// </summary>
-		public BankConfiguration() 
+		public BankConfiguration() : this("")
       {
-			Rules = new List<Rule>();
 		}
 
 		/// <summary>
@@ -35,19 +34,26 @@ namespace BankLib.Configuration
 		/// <param name="filePath">The configuration file with relevant parameters.</param>
 		public BankConfiguration(string filePath) : base(filePath) 
       {
-         Rules = new List<Rule>();       
+         Rules = new List<Rule>();
+         InputFile = "";
       }
 
       /// <summary>
-      /// Date format used to evaluate Reference Data and Trades.
+      /// Gets or Sets the Date format used to evaluate Reference Data and Trades.
       /// </summary>
       [XmlElement("dateformat")]
       public string DateFormat { get; set; }
 
-      /// <summary>
-      /// List of Rules (and its criteria) used to evaluate Trades.
-      /// </summary>
-      [XmlArray("rules")]
+		/// <summary>
+		/// Gets or Sets the file with parameters and trade inputs. If blank, will not be used.
+		/// </summary>
+		[XmlElement("inputfile")]
+		public string InputFile { get; set; }
+
+		/// <summary>
+		/// Gets or sets the List of Rules (and its criteria) used to evaluate Trades.
+		/// </summary>
+		[XmlArray("rules")]
       public List<Rule> Rules { get; set; } 
 
       /// <summary>
@@ -61,6 +67,7 @@ namespace BankLib.Configuration
 
 			Rules = bc.Rules;
          DateFormat = bc.DateFormat;
+         InputFile = bc.InputFile;
 
          LogHelper.Logger.Debug("Reordering Rules by PRIORITY.");
 
