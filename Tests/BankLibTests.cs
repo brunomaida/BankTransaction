@@ -8,6 +8,8 @@ namespace Tests
    {
 		Bank _bank = Bank.Instance;
 
+		readonly string _inputFilename = "input.txt";
+
 		readonly string _fileName = "bankconfig.xml";
 		readonly string _configPath = AppDomain.CurrentDomain.BaseDirectory;
 
@@ -89,6 +91,25 @@ namespace Tests
 			_bank = Bank.Instance;
 			_bank.Configuration.FilePath = _configPath + _fileName;
 			_bank.Configuration.DateFormat = "MM/dd/yyyy";
+			_bank.Configuration.InputFile = _inputFilename;
+
+			Rule r1 = new Rule(1, "EXPIRED", new List<RuleCriteria>());
+			Rule r2 = new Rule(2, "HIGHRISK", new List<RuleCriteria>());
+			Rule r3 = new Rule(3, "MEDIUMRISK", new List<RuleCriteria>());
+
+			r1.Criterias.Add(new DaysToExpireRuleCriteria { DaysToExpire = 30 });
+			r2.Criterias.Add(new CapitalRuleCriteria { CompareType = ComparisonType.GreaterOrEqualTo, Capital = 1000000 });
+			r2.Criterias.Add(new SectorRuleCriteria { CompareType = ComparisonType.EqualTo, Sector = "PRIVATE" });
+			r3.Criterias.Add(new CapitalRuleCriteria { CompareType = ComparisonType.GreaterOrEqualTo, Capital = 1000000 });
+			r3.Criterias.Add(new SectorRuleCriteria { CompareType = ComparisonType.EqualTo, Sector = "PUBLIC" });
+
+			_bank.Configuration.Rules = new List<Rule>
+			{
+				r1,
+				r2,
+				r3
+			};
+			_bank.Configuration.Save();
 		}
 
 		#region BankConfiguration Tests
@@ -718,7 +739,7 @@ namespace Tests
 				r3,
 				r4
 			};
-			_bank.Configuration.Save();
+			//_bank.Configuration.Save();
 
 			var result = _bank.ValidateTransactions();
 			Assert.That(result.SequenceEqual(_result3));
@@ -749,7 +770,7 @@ namespace Tests
 				r3,
 				r4
 			};
-			_bank.Configuration.Save();
+			//_bank.Configuration.Save();
 
 			var result = _bank.ValidateTransactions();
 			Assert.That(result.Count == 5);
@@ -776,11 +797,12 @@ namespace Tests
 				r2,
 				r3
 			};
-			_bank.Configuration.Save();
+			//_bank.Configuration.Save();
 
 			var result = _bank.ValidateTransactions();
 			Assert.That(result.SequenceEqual(_resultOrig));
 		}
+
 		[Test]
 		public void Test_Bank_ValidateOriginal_Variant1_OK()
 		{			
@@ -806,6 +828,15 @@ namespace Tests
 
 			var result = _bank.ValidateTransactions();
 			Assert.That(result.SequenceEqual(_resultOrig1));
+		}
+
+		[Test]
+		public void Test_Bank_ValidateOriginal_FromFile_OK()
+		{
+			_bank.SetInputParametersAndTradesFromFile();
+
+			var result = _bank.ValidateTransactions();
+			Assert.That(result.SequenceEqual(_resultOrig));
 		}
 
 		#endregion
