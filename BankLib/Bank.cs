@@ -1,4 +1,4 @@
-﻿using BankLib.Configuration;
+using BankLib.Configuration;
 using BankLib.Rules;
 using System;
 using System.Collections.Generic;
@@ -108,11 +108,27 @@ namespace BankLib
          SetInputParametersAndTrades(refDate, count, trades);
       }
 
-      public void SetInputParametersAndTrades(string all)
+		/// <summary>
+		/// Updates the inputs and validates all data and formats if local file was specified in bank configuration.
+		/// </summary>		
+		public void SetInputParametersAndTradesFromFile()
+		{
+         if (Configuration.InputFile.Length == 0)
+            throw new FileLoadException("Input File not specified");
+
+         string input = TradeHelper.ReadInputFile(Configuration.InputFile);
+         SetInputParametersAndTrades(input);
+		}
+
+		/// <summary>
+		/// Updates the inputs and validates all data and formats.
+		/// </summary>
+		/// <param name="all">All inputs together: The Reference date to compare Payment dates, The number of records to be processed and The list of trades to be processed.</param>
+		public void SetInputParametersAndTrades(string all)
       {
          int len = all.Contains("\r\n") ? 4 : 2;         
          string[] split = TradeHelper.Split(all);
-         all = all.Substring(split[0].Length + split[1].Length + len);
+         all = all.TrimEnd().Substring(split[0].Length + split[1].Length + len);
          SetInputParametersAndTrades(split[0], split[1], all);
       }
 
@@ -141,7 +157,7 @@ namespace BankLib
          Trades = ValidateTrades(trades);
          bool b3 = Trades.All(t => t.IsValid);
 
-         HasValidInputs = b1 && b2;// && b3;
+         HasValidInputs = b1 && b2; // && b3;
 
          LogHelper.Logger.Debug("Bank HasValidInputs(after SetInputParametersAndTrades): {0}", HasValidInputs);
       }
@@ -150,7 +166,7 @@ namespace BankLib
       /// Validates all trades according to the priority of the rules
       /// </summary>
       /// <returns>List of rule Names for each trade (Error message for those without any match).</returns>
-      public List<string> ValidateTransactions()
+      public List<string> ValidateTransactions() 
       {
          int i = 1;
          var list = new List<string>();
@@ -200,7 +216,7 @@ namespace BankLib
          {
             Trade t = new Trade(ReferenceDate, line, Configuration.DateFormat);
             list.Add(t);
-         }
+			}
          return list;
       }
 
